@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class Invitation extends Model
+{
+    protected $fillable = ['guest_id', 'sent_via', 'sent_at', 'opened_at', 'link'];
+
+    protected $casts = [
+        'sent_at' => 'datetime',
+        'opened_at' => 'datetime',
+    ];
+
+    public function guest(): BelongsTo
+    {
+        return $this->belongsTo(Guest::class);
+    }
+}
