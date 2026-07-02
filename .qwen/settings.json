@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(curl *)",
-      "Bash(php *)"
+      "Bash(php *)",
+      "Bash(git remote *)",
+      "Bash(git push *)"
     ]
   },
   "$version": 4
