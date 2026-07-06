@@ -13,6 +13,7 @@ class Event extends Model
         'date', 'time_start', 'time_end', 'venue_name', 'venue_address',
         'venue_lat', 'venue_lng', 'description', 'cover_image',
         'love_story', 'gallery', 'music_url', 'theme_color', 'is_active',
+        'status',
     ];
 
     protected $casts = [
@@ -23,6 +24,43 @@ class Event extends Model
         'venue_lat' => 'decimal:7',
         'venue_lng' => 'decimal:7',
     ];
+
+    /**
+     * Auto-sync is_active based on status for backward compatibility.
+     */
+    protected static function booted(): void
+    {
+        static::saving(function (Event $event) {
+            if ($event->isDirty('status')) {
+                $event->is_active = $event->status === 'active';
+            }
+        });
+    }
+
+    /**
+     * Check if this event has been configured with actual data.
+     */
+    public function isConfigured(): bool
+    {
+        return $this->status !== 'unconfigured'
+            && !is_null($this->title)
+            && !is_null($this->groom_name)
+            && !is_null($this->bride_name);
+    }
+
+    /**
+     * Get the display label for the event status.
+     */
+    public function getStatusLabelAttribute(): string
+    {
+        return match($this->status) {
+            'unconfigured' => 'Belum Dikonfigurasi',
+            'draft' => 'Draft',
+            'active' => 'Aktif',
+            'done' => 'Selesai',
+            default => ucfirst($this->status ?? 'unconfigured'),
+        };
+    }
 
     public function user(): BelongsTo
     {

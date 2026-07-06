@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\Event;
+use App\Models\User;
+use App\Observers\UserObserver;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,6 +23,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Register observers
+        User::observe(UserObserver::class);
+
         // Share managed event data with layout views for navbar indicator
         View::composer('layouts.app', function ($view) {
             $managedEvent = null;

@@ -65,12 +65,12 @@
 
     <header class="fixed top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-xl border-b border-white/20 shadow-sm">
         <nav class="flex justify-between items-center w-full px-8 py-5 max-w-7xl mx-auto">
-            <div class="font-headline text-2xl font-bold tracking-tight text-primary">NIKAH YUK!</div>
+            <div class="font-headline text-2xl text-yellow-50 font-bold tracking-tight text-primary">NIKAH YUK!</div>
             <div class="hidden md:flex items-center gap-10">
-                <a class="text-on-surface/80 font-medium hover:text-primary transition-colors duration-300" href="#">Home</a>
-                <a class="text-on-surface/80 font-medium hover:text-primary transition-colors duration-300" href="#">Features</a>
-                <a class="text-on-surface/80 font-medium hover:text-primary transition-colors duration-300" href="#">Pricing</a>
-                <a class="text-on-surface/80 font-medium hover:text-primary transition-colors duration-300" href="#">Gallery</a>
+                <a class="text-on-surface/80 font-medium hover:text-primary text-yellow-50 transition-colors duration-300" href="#">Home</a>
+                <a class="text-on-surface/80 font-medium hover:text-primary text-yellow-50 transition-colors duration-300" href="#">Features</a>
+                <a class="text-on-surface/80 font-medium hover:text-primary text-yellow-50 transition-colors duration-300" href="#">Pricing</a>
+                <a class="text-on-surface/80 font-medium hover:text-primary text-yellow-50 transition-colors duration-300" href="#">Gallery</a>
             </div>
             <div class="flex items-center gap-4 text-primary">
                 <button class="material-symbols-outlined p-2 hover:bg-white/40 rounded-full transition-colors">settings</button>
@@ -87,7 +87,7 @@
         <div class="relative z-10 w-full max-w-[540px] px-6 py-12">
             <div class="glass-card rounded-[3rem] p-12 md:p-16 flex flex-col gap-10">
                 <div class="text-center space-y-4">
-                    <h1 class="font-headline text-5xl font-bold text-primary tracking-tight leading-tight">Welcome Back</h1>
+                    <h1 class="font-headline text-5xl text-yellow-50 font-bold text-primary tracking-tight leading-tight">Welcome Back</h1>
                     <p class="text-on-surface-variant font-medium text-lg tracking-wide">Enter your details to access your dashboard</p>
                 </div>
                 
@@ -97,7 +97,7 @@
                     @csrf
                     
                     <div class="flex flex-col gap-2">
-                        <label class="font-label text-xs font-bold text-primary px-1 tracking-[0.15em] uppercase" for="email">{{ __('Email Address') }}</label>
+                        <label class="font-label text-xs text-yellow-50 font-bold text-primary px-1 tracking-[0.15em] uppercase" for="email">{{ __('Email Address') }}</label>
                         <div class="relative group">
                             <span class="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-outline/60">mail</span>
                             <input class="glass-input h-16 pl-14 pr-6 w-full rounded-2xl text-on-surface placeholder:text-outline/60 font-medium text-lg" 
@@ -112,7 +112,7 @@
                     </div>
                     
                     <div class="flex flex-col gap-2">
-                        <label class="font-label text-xs font-bold text-primary px-1 tracking-[0.15em] uppercase" for="password">{{ __('Password') }}</label>
+                        <label class="font-label text-xs text-yellow-50 font-bold text-primary px-1 tracking-[0.15em] uppercase" for="password">{{ __('Password') }}</label>
                         <div class="relative group">
                             <span class="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-outline/60">lock</span>
                             <input class="glass-input h-16 pl-14 pr-14 w-full rounded-2xl text-on-surface placeholder:text-outline/60 font-medium text-lg" 
@@ -132,11 +132,11 @@
                     <div class="flex items-center justify-between mt-1 px-1">
                         <label for="remember_me" class="inline-flex items-center group cursor-pointer">
                             <input id="remember_me" type="checkbox" class="rounded border-outline/40 bg-white/20 text-primary shadow-sm focus:ring-primary/50 cursor-pointer" name="remember">
-                            <span class="ms-2 text-sm font-medium text-on-surface-variant group-hover:text-primary transition-colors">{{ __('Remember me') }}</span>
+                            <span class="ms-2 text-sm text-yellow-50 font-medium text-on-surface-variant group-hover:text-primary transition-colors">{{ __('Remember me') }}</span>
                         </label>
 
                         @if (Route::has('password.request'))
-                            <a class="text-secondary font-bold text-sm hover:text-primary transition-all underline underline-offset-4 decoration-secondary/30" href="{{ route('password.request') }}">
+                            <a class="text-secondary text-yellow-50 font-bold text-sm hover:text-primary transition-all underline underline-offset-4 decoration-secondary/30" href="{{ route('password.request') }}">
                                 {{ __('Forgot Password?') }}
                             </a>
                         @endif

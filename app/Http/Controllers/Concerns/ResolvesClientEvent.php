@@ -7,13 +7,13 @@ use App\Models\Event;
 /**
  * Trait to resolve the active Event for the current request.
  *
- * - Pengantin users: returns their own first event (existing behavior).
+ * - Pengantin users: returns their own event (via clientEvent relationship).
  * - Superadmin users: returns the event stored in session('managed_event_id'),
  *   allowing them to manage any client's workspace.
  */
 trait ResolvesClientEvent
 {
-    protected function resolveEvent(): Event
+    protected function resolveEvent(): ?Event
     {
         $user = auth()->user();
 
@@ -25,7 +25,14 @@ trait ResolvesClientEvent
             return Event::findOrFail($eventId);
         }
 
-        // Default behavior for pengantin — unchanged
-        return $user->events()->firstOrFail();
+        // Default behavior for pengantin
+        $event = $user->clientEvent;
+
+        // If event is unconfigured, return null so dashboard can handle it
+        if ($event && !$event->isConfigured()) {
+            return null;
+        }
+
+        return $event;
     }
 }

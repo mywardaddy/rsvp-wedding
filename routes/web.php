@@ -99,8 +99,14 @@ Route::middleware(['auth', 'role:superadmin', 'log.activity'])
         Route::post('/users/{user}/reset-password', [AdminUserController::class, 'resetPassword'])->name('users.reset-password');
         Route::post('/users/{user}/toggle-active', [AdminUserController::class, 'toggleActive'])->name('users.toggle-active');
 
-        // Client Management
+        // Client Management (user-centric: driven by pengantin accounts)
         Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
+        Route::get('/clients/{user}/setup', [ClientController::class, 'setup'])->name('clients.setup');
+        Route::post('/clients/{user}/setup', [ClientController::class, 'storeSetup'])->name('clients.store-setup');
+        Route::get('/clients/{user}/edit', [ClientController::class, 'edit'])->name('clients.edit');
+        Route::put('/clients/{user}', [ClientController::class, 'update'])->name('clients.update');
+        Route::post('/clients/{user}/toggle', [ClientController::class, 'toggleActive'])->name('clients.toggle');
+        Route::delete('/clients/{user}', [ClientController::class, 'destroy'])->name('clients.destroy');
         Route::post('/clients/{event}/manage', [ClientController::class, 'manage'])->name('clients.manage');
         Route::post('/clients/switch-back', [ClientController::class, 'switchBack'])->name('clients.switch-back');
     });
