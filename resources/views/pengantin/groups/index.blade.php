@@ -44,7 +44,7 @@
                         <i class="fas fa-eye mr-1"></i>Lihat Tamu
                     </a>
                     <span class="text-gray-300">·</span>
-                    <form action="{{ route('pengantin.groups.destroy', $group) }}" method="POST" class="inline" onsubmit="return confirm('Hapus grup {{ $group->name }}?')">
+                    <form action="{{ route('pengantin.groups.destroy', $group) }}" method="POST" class="inline" data-confirm="Hapus grup {{ $group->name }}?">
                         @csrf @method('DELETE')
                         <button class="text-xs text-red-400 hover:text-red-600 font-medium"><i class="fas fa-trash mr-1"></i>Hapus</button>
                     </form>

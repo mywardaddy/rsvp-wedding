@@ -57,7 +57,7 @@
                         <td class="text-right">
                             <div class="flex items-center justify-end gap-1">
                                 <a href="{{ route('admin.users.edit', $user) }}" class="p-2 rounded-lg hover:bg-blue-50 text-gray-500 hover:text-blue-600 transition-colors"><i class="fas fa-edit text-sm"></i></a>
-                                <form action="{{ route('admin.users.reset-password', $user) }}" method="POST" class="inline" onsubmit="return confirm('Reset password {{ $user->name }}?')">
+                                <form action="{{ route('admin.users.reset-password', $user) }}" method="POST" class="inline" data-confirm="Reset password {{ $user->name }}?">
                                     @csrf
                                     <button class="p-2 rounded-lg hover:bg-orange-50 text-gray-500 hover:text-orange-600 transition-colors"><i class="fas fa-key text-sm"></i></button>
                                 </form>
@@ -68,7 +68,7 @@
                                     </button>
                                 </form>
                                 @if($user->id !== auth()->id())
-                                <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="inline" onsubmit="return confirm('Hapus {{ $user->name }}?')">
+                                <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="inline" data-confirm="Hapus {{ $user->name }}?">
                                     @csrf @method('DELETE')
                                     <button class="p-2 rounded-lg hover:bg-red-50 text-gray-500 hover:text-red-600 transition-colors"><i class="fas fa-trash text-sm"></i></button>
                                 </form>

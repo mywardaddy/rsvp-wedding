@@ -195,7 +195,7 @@
 
                         @if($isActive)
                             {{-- Toggle Nonaktif --}}
-                            <form method="POST" action="{{ route('admin.clients.toggle', $client) }}" class="inline" onsubmit="return confirm('Nonaktifkan client {{ $client->name }}?')">
+                            <form method="POST" action="{{ route('admin.clients.toggle', $client) }}" class="inline" data-confirm="Nonaktifkan client {{ $client->name }}?">
                                 @csrf
                                 <button type="submit" class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-gray-200 text-gray-500 hover:text-orange-600 hover:border-orange-200 hover:bg-orange-50 transition-all duration-200" title="Nonaktifkan">
                                     <i class="fas fa-ban text-sm"></i>
@@ -203,7 +203,7 @@
                             </form>
                         @else
                             {{-- Toggle Aktifkan --}}
-                            <form method="POST" action="{{ route('admin.clients.toggle', $client) }}" class="flex-1" onsubmit="return confirm('Aktifkan kembali client {{ $client->name }}?')">
+                            <form method="POST" action="{{ route('admin.clients.toggle', $client) }}" class="flex-1" data-confirm="Aktifkan kembali client {{ $client->name }}?">
                                 @csrf
                                 <button type="submit" class="btn-outline w-full justify-center text-sm border-green-200 text-green-600 hover:bg-green-50">
                                     <i class="fas fa-check-circle"></i> Aktifkan
@@ -213,7 +213,7 @@
 
                         {{-- Hapus Event Data --}}
                         @if($isConfigured)
-                        <form method="POST" action="{{ route('admin.clients.destroy', $client) }}" class="inline" onsubmit="return confirm('Hapus data event client ini? Semua data tamu akan terhapus. Akun pengantin TIDAK akan dihapus.')">
+                        <form method="POST" action="{{ route('admin.clients.destroy', $client) }}" class="inline" data-confirm="Hapus data event client ini? Semua data tamu akan terhapus. Akun pengantin TIDAK akan dihapus.">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-gray-200 text-gray-500 hover:text-red-600 hover:border-red-200 hover:bg-red-50 transition-all duration-200" title="Hapus Data Event">

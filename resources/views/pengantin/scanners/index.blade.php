@@ -64,14 +64,14 @@
                             </button>
                         </form>
 
-                        <form method="POST" action="{{ route('pengantin.scanners.reset-password', $scanner) }}" onsubmit="return confirm('Reset password ke \'password\'?')">
+                        <form method="POST" action="{{ route('pengantin.scanners.reset-password', $scanner) }}" data-confirm="Reset password ke 'password'?">
                             @csrf
                             <button type="submit" class="btn-outline text-xs px-3 py-1.5">
                                 <i class="fas fa-key"></i> Reset Password
                             </button>
                         </form>
 
-                        <form method="POST" action="{{ route('pengantin.scanners.destroy', $scanner) }}" onsubmit="return confirm('Hapus petugas ini dari event?')">
+                        <form method="POST" action="{{ route('pengantin.scanners.destroy', $scanner) }}" data-confirm="Hapus petugas ini dari event?">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold border-2 transition-all duration-300" style="border-color:rgba(229,115,115,0.3);color:#C62828;">

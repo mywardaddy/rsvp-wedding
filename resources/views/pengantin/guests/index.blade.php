@@ -130,7 +130,7 @@
                                     <i class="fas fa-external-link-alt text-sm"></i>
                                 </a>
                                 <form action="{{ route('pengantin.guests.destroy', $guest) }}" method="POST" class="inline"
-                                      onsubmit="return confirm('Hapus tamu {{ $guest->name }}?')">
+                                      data-confirm="Hapus tamu {{ $guest->name }}?">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="p-2 rounded-lg hover:bg-red-50 text-gray-500 hover:text-red-600 transition-colors" title="Hapus">
                                         <i class="fas fa-trash text-sm"></i>

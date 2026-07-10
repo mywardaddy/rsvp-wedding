@@ -260,100 +260,78 @@
                 <p class="font-body text-on-surface-variant">Choose the perfect tier for your cinematic story.</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-                <!-- Silver Tier -->
-                <div class="glass-morphism rounded-[2.5rem] p-10 border border-outline-variant/20 flex flex-col hover:scale-[1.02] transition-transform duration-300">
-                    <div class="mb-8">
-                        <h3 class="font-headline text-2xl text-primary mb-2">Silver</h3>
-                        <div class="flex items-baseline gap-1">
-                            <span class="text-4xl font-bold text-primary">$199</span>
-                            <span class="text-on-surface-variant">/event</span>
-                        </div>
-                    </div>
-                    <ul class="space-y-4 mb-10 flex-grow">
-                        <li class="flex items-center gap-3 text-on-surface-variant">
-                            <span class="material-symbols-outlined text-emerald-600 text-sm">check_circle</span>
-                            Digital Invitation Link
-                        </li>
-                        <li class="flex items-center gap-3 text-on-surface-variant">
-                            <span class="material-symbols-outlined text-emerald-600 text-sm">check_circle</span>
-                            RSVP Management
-                        </li>
-                        <li class="flex items-center gap-3 text-on-surface-variant">
-                            <span class="material-symbols-outlined text-emerald-600 text-sm">check_circle</span>
-                            Basic Photo Gallery (10 photos)
-                        </li>
-                        <li class="flex items-center gap-3 text-on-surface-variant/50">
-                            <span class="material-symbols-outlined text-sm">cancel</span>
-                            Custom Background Music
-                        </li>
-                    </ul>
-                    <button class="w-full py-4 rounded-full border border-primary text-primary font-bold hover:bg-primary hover:text-white transition-colors">Select Silver</button>
-                </div>
+                @forelse($packages as $package)
+                {{-- Package Card --}}
+                <div class="glass-morphism rounded-[2.5rem] p-10 relative flex flex-col {{ $package->is_featured ? 'rose-gold-glow bg-white/80 hover:scale-[1.05] z-10' : 'border border-outline-variant/20 hover:scale-[1.02]' }} transition-transform duration-300">
 
-                <!-- Platinum Tier (Featured) -->
-                <div class="glass-morphism rounded-[2.5rem] p-10 relative rose-gold-glow flex flex-col hover:scale-[1.05] transition-transform duration-300 z-10 bg-white/80">
-                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-secondary text-white px-6 py-1 rounded-full text-xs font-bold tracking-widest uppercase">Most Beloved</div>
-                    <div class="mb-8">
-                        <h3 class="font-headline text-3xl text-primary mb-2">Platinum</h3>
-                        <div class="flex items-baseline gap-1">
-                            <span class="text-5xl font-bold text-primary">$499</span>
-                            <span class="text-on-surface-variant">/event</span>
-                        </div>
+                    {{-- Badge --}}
+                    @if($package->badge)
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-secondary text-white px-6 py-1 rounded-full text-xs font-bold tracking-widest uppercase">
+                        {{ $package->badge }}
                     </div>
-                    <ul class="space-y-4 mb-10 flex-grow">
-                        <li class="flex items-center gap-3 text-primary font-medium">
-                            <span class="material-symbols-outlined text-secondary text-sm">auto_awesome</span>
-                            Cinematic 3D Animation
-                        </li>
-                        <li class="flex items-center gap-3 text-on-surface-variant">
-                            <span class="material-symbols-outlined text-emerald-600 text-sm">check_circle</span>
-                            Premium RSVP Analytics
-                        </li>
-                        <li class="flex items-center gap-3 text-on-surface-variant">
-                            <span class="material-symbols-outlined text-emerald-600 text-sm">check_circle</span>
-                            Infinite Cinematic Gallery
-                        </li>
-                        <li class="flex items-center gap-3 text-on-surface-variant">
-                            <span class="material-symbols-outlined text-emerald-600 text-sm">check_circle</span>
-                            Bespoke Music Scoring
-                        </li>
-                        <li class="flex items-center gap-3 text-on-surface-variant">
-                            <span class="material-symbols-outlined text-emerald-600 text-sm">check_circle</span>
-                            3D Interactive Guestbook
-                        </li>
-                    </ul>
-                    <button class="w-full py-5 rounded-full jeweled-action text-white font-bold shadow-xl hover:opacity-90 transition-opacity">Elevate to Platinum</button>
-                </div>
+                    @endif
 
-                <!-- Gold Tier -->
-                <div class="glass-morphism rounded-[2.5rem] p-10 border border-outline-variant/20 flex flex-col hover:scale-[1.02] transition-transform duration-300">
                     <div class="mb-8">
-                        <h3 class="font-headline text-2xl text-primary mb-2">Gold</h3>
+                        <h3 class="font-headline {{ $package->is_featured ? 'text-3xl' : 'text-2xl' }} text-primary mb-2">{{ $package->name }}</h3>
+                        @if($package->description)
+                        <p class="text-sm text-on-surface-variant mb-3">{{ $package->description }}</p>
+                        @endif
+
+                        {{-- Price Display --}}
+                        @if($package->has_discount)
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-lg text-on-surface-variant/60 line-through">{{ $package->formatted_price }}</span>
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-600">
+                                -{{ $package->discount_label }}
+                            </span>
+                        </div>
                         <div class="flex items-baseline gap-1">
-                            <span class="text-4xl font-bold text-primary">$299</span>
+                            <span class="{{ $package->is_featured ? 'text-5xl' : 'text-4xl' }} font-bold text-primary">{{ $package->formatted_discounted_price }}</span>
                             <span class="text-on-surface-variant">/event</span>
                         </div>
+                        @else
+                        <div class="flex items-baseline gap-1">
+                            <span class="{{ $package->is_featured ? 'text-5xl' : 'text-4xl' }} font-bold text-primary">{{ $package->formatted_price }}</span>
+                            <span class="text-on-surface-variant">/event</span>
+                        </div>
+                        @endif
                     </div>
+
+                    {{-- Features List --}}
                     <ul class="space-y-4 mb-10 flex-grow">
-                        <li class="flex items-center gap-3 text-on-surface-variant">
-                            <span class="material-symbols-outlined text-emerald-600 text-sm">check_circle</span>
-                            Premium Visual Theme
+                        @foreach($package->features as $feature)
+                        <li class="flex items-center gap-3 {{ $feature->is_included ? ($package->is_featured && $loop->first ? 'text-primary font-medium' : 'text-on-surface-variant') : 'text-on-surface-variant/50' }}">
+                            @if($feature->is_included)
+                                @if($package->is_featured && $loop->first)
+                                <span class="material-symbols-outlined text-secondary text-sm" data-icon="auto_awesome">auto_awesome</span>
+                                @else
+                                <span class="material-symbols-outlined text-emerald-600 text-sm">check_circle</span>
+                                @endif
+                            @else
+                                <span class="material-symbols-outlined text-sm">cancel</span>
+                            @endif
+                            {{ $feature->name }}
                         </li>
-                        <li class="flex items-center gap-3 text-on-surface-variant">
-                            <span class="material-symbols-outlined text-emerald-600 text-sm">check_circle</span>
-                            Extended Gallery (30 photos)
-                        </li>
-                        <li class="flex items-center gap-3 text-on-surface-variant">
-                            <span class="material-symbols-outlined text-emerald-600 text-sm">check_circle</span>
-                            Standard Guestbook
-                        </li>
-                        <li class="flex items-center gap-3 text-on-surface-variant">
-                            <span class="material-symbols-outlined text-emerald-600 text-sm">check_circle</span>
-                            Custom Background Music
-                        </li>
+                        @endforeach
                     </ul>
-                    <button class="w-full py-4 rounded-full border border-primary text-primary font-bold hover:bg-primary hover:text-white transition-colors">Select Gold</button>
+
+                    {{-- CTA Button --}}
+                    @if($package->is_featured)
+                    <a href="{{ route('order.create', $package->slug) }}" class="w-full py-5 rounded-full jeweled-action text-white font-bold shadow-xl hover:opacity-90 transition-opacity text-center block">
+                        Pilih {{ $package->name }}
+                    </a>
+                    @else
+                    <a href="{{ route('order.create', $package->slug) }}" class="w-full py-4 rounded-full border border-primary text-primary font-bold hover:bg-primary hover:text-white transition-colors text-center block">
+                        Pilih {{ $package->name }}
+                    </a>
+                    @endif
                 </div>
+                @empty
+                {{-- Fallback if no packages --}}
+                <div class="col-span-3 text-center py-16">
+                    <p class="text-on-surface-variant text-lg">Paket harga akan segera tersedia.</p>
+                </div>
+                @endforelse
             </div>
         </div>
     </section>

@@ -74,6 +74,14 @@
                                 <i class="fas fa-user-shield w-5"></i>
                                 <span>Kelola Users</span>
                             </a>
+                            <a href="{{ route('admin.pricing.index') }}" class="nav-link {{ request()->routeIs('admin.pricing.*') ? 'active' : '' }}">
+                                <i class="fas fa-tags w-5"></i>
+                                <span>Kelola Paket</span>
+                            </a>
+                            <a href="{{ route('admin.orders.index') }}" class="nav-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
+                                <i class="fas fa-shopping-cart w-5"></i>
+                                <span>Kelola Pesanan</span>
+                            </a>
                         </div>
                         @endif
 
@@ -155,26 +163,16 @@
 
                 <!-- Page Content -->
                 <main class="p-4 sm:p-6">
-                    <!-- Flash Messages -->
                     @if(session('success'))
-                    <div class="mb-4 p-4 rounded-xl bg-green-50 border border-green-200 text-green-700 flex items-center gap-3 animate-slide-down">
-                        <i class="fas fa-check-circle text-green-500"></i>
-                        <span>{{ session('success') }}</span>
-                    </div>
+                    <script>document.addEventListener('DOMContentLoaded', function(){ Swal.fire({ icon: 'success', title: 'Berhasil!', text: {!! json_encode(session('success')) !!}, toast: true, position: 'top-end', timer: 4000, showConfirmButton: false, timerProgressBar: true }); });</script>
                     @endif
 
                     @if(session('error'))
-                    <div class="mb-4 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 flex items-center gap-3 animate-slide-down">
-                        <i class="fas fa-exclamation-circle text-red-500"></i>
-                        <span>{{ session('error') }}</span>
-                    </div>
+                    <script>document.addEventListener('DOMContentLoaded', function(){ Swal.fire({ icon: 'error', title: 'Gagal!', text: {!! json_encode(session('error')) !!}, toast: true, position: 'top-end', timer: 4000, showConfirmButton: false, timerProgressBar: true }); });</script>
                     @endif
 
                     @if(session('info'))
-                    <div class="mb-4 p-4 rounded-xl bg-blue-50 border border-blue-200 text-blue-700 flex items-center gap-3 animate-slide-down">
-                        <i class="fas fa-info-circle text-blue-500"></i>
-                        <span>{{ session('info') }}</span>
-                    </div>
+                    <script>document.addEventListener('DOMContentLoaded', function(){ Swal.fire({ icon: 'info', title: 'Informasi', text: {!! json_encode(session('info')) !!}, toast: true, position: 'top-end', timer: 4000, showConfirmButton: false, timerProgressBar: true }); });</script>
                     @endif
 
                     {{ $slot }}

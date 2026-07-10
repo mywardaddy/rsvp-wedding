@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicInvitationController;
 use App\Http\Controllers\ScannerController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentCallbackController;
 use App\Http\Controllers\Pengantin\DashboardController as PengantinDashboard;
 use App\Http\Controllers\Pengantin\GuestController;
 use App\Http\Controllers\Pengantin\GuestGroupController;
@@ -10,6 +12,9 @@ use App\Http\Controllers\Pengantin\ScannerManagementController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\ClientController;
+use App\Http\Controllers\Admin\PricingPackageController;
+use App\Http\Controllers\Admin\PricingFeatureController;
+use App\Http\Controllers\Admin\OrderManagementController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,7 +23,11 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 Route::get('/', function () {
-    return view('welcome');
+    $packages = \App\Models\PricingPackage::with('features')
+        ->active()
+        ->ordered()
+        ->get();
+    return view('welcome', compact('packages'));
 })->name('home');
 
 // Public invitation & RSVP
@@ -26,6 +35,25 @@ Route::get('/invitation/{slug}', [PublicInvitationController::class, 'show'])->n
 Route::post('/invitation/{slug}/rsvp', [PublicInvitationController::class, 'rsvp'])->name('invitation.rsvp');
 Route::get('/invitation/{slug}/ticket', [PublicInvitationController::class, 'ticket'])->name('invitation.ticket');
 Route::post('/wishes/{eventSlug}', [PublicInvitationController::class, 'storeWish'])->name('wishes.store');
+
+/*
+|--------------------------------------------------------------------------
+| Public Order & Payment Routes
+|--------------------------------------------------------------------------
+*/
+Route::prefix('order')->name('order.')->group(function () {
+    Route::get('/{packageSlug}/checkout', [OrderController::class, 'create'])->name('create');
+    Route::post('/', [OrderController::class, 'store'])->name('store');
+    Route::get('/{orderNumber}', [OrderController::class, 'show'])->name('show');
+    Route::get('/{orderNumber}/payment', [OrderController::class, 'payment'])->name('payment');
+    Route::post('/{orderNumber}/payment', [OrderController::class, 'processPayment'])->name('process-payment');
+});
+
+// Payment Gateway Webhooks (no CSRF)
+Route::prefix('payment/callback')->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class])->group(function () {
+    Route::post('/midtrans', [PaymentCallbackController::class, 'handleMidtrans'])->name('payment.callback.midtrans');
+    Route::post('/xendit', [PaymentCallbackController::class, 'handleXendit'])->name('payment.callback.xendit');
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -109,6 +137,22 @@ Route::middleware(['auth', 'role:superadmin', 'log.activity'])
         Route::delete('/clients/{user}', [ClientController::class, 'destroy'])->name('clients.destroy');
         Route::post('/clients/{event}/manage', [ClientController::class, 'manage'])->name('clients.manage');
         Route::post('/clients/switch-back', [ClientController::class, 'switchBack'])->name('clients.switch-back');
+
+        // Pricing Package Management
+        Route::resource('pricing', PricingPackageController::class)->parameters(['pricing' => 'package']);
+        Route::post('/pricing/{package}/toggle-active', [PricingPackageController::class, 'toggleActive'])->name('pricing.toggle-active');
+        Route::post('/pricing/update-order', [PricingPackageController::class, 'updateOrder'])->name('pricing.update-order');
+
+        // Pricing Features Management
+        Route::post('/pricing/{package}/features', [PricingFeatureController::class, 'store'])->name('pricing.features.store');
+        Route::put('/pricing/features/{feature}', [PricingFeatureController::class, 'update'])->name('pricing.features.update');
+        Route::delete('/pricing/features/{feature}', [PricingFeatureController::class, 'destroy'])->name('pricing.features.destroy');
+        Route::post('/pricing/{package}/features/update-order', [PricingFeatureController::class, 'updateOrder'])->name('pricing.features.update-order');
+
+        // Order Management
+        Route::get('/orders', [OrderManagementController::class, 'index'])->name('orders.index');
+        Route::get('/orders/{order}', [OrderManagementController::class, 'show'])->name('orders.show');
+        Route::post('/orders/{order}/status', [OrderManagementController::class, 'updateStatus'])->name('orders.update-status');
     });
 
 /*
