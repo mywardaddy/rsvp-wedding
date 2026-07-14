@@ -28,6 +28,9 @@ class User extends Authenticatable
         'phone',
         'avatar',
         'is_active',
+        'order_id',
+        'subscription_status',
+        'activated_at',
     ];
 
     /**
@@ -51,6 +54,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_active' => 'boolean',
+            'activated_at' => 'datetime',
         ];
     }
 
@@ -58,6 +62,11 @@ class User extends Authenticatable
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(Order::class);
     }
 
     public function events(): HasMany

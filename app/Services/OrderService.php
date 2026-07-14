@@ -8,6 +8,7 @@ use App\Mail\OrderCreatedMail;
 use App\Mail\NewOrderNotificationMail;
 use App\Mail\PaymentSuccessMail;
 use App\Mail\PaymentReceivedNotificationMail;
+use App\Services\AccountProvisioningService;
 use Illuminate\Support\Facades\Mail;
 
 class OrderService
@@ -21,7 +22,7 @@ class OrderService
 
         $order = Order::create([
             'pricing_package_id' => $package->id,
-            'user_id' => auth()->id(),
+            'user_id' => null, // Will be set after payment by AccountProvisioningService
             'customer_name' => $data['customer_name'],
             'customer_email' => $data['customer_email'],
             'customer_whatsapp' => $data['customer_whatsapp'],
@@ -35,6 +36,7 @@ class OrderService
             'discount_amount' => $package->discount_amount,
             'total_amount' => $package->discounted_price,
             'status' => 'pending_payment',
+            'expired_at' => now()->addHours(24),
         ]);
 
         // Send notification emails
@@ -44,7 +46,7 @@ class OrderService
     }
 
     /**
-     * Mark order as paid.
+     * Mark order as paid and provision pengantin account.
      */
     public function markAsPaid(Order $order): Order
     {
@@ -55,6 +57,10 @@ class OrderService
 
         // Send payment success notifications
         $this->sendPaymentSuccessNotifications($order);
+
+        // Auto-provision pengantin account
+        $provisioningService = new AccountProvisioningService();
+        $provisioningService->provision($order);
 
         return $order;
     }

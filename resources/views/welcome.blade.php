@@ -81,6 +81,9 @@
         }
     </script>
     <style>
+        html {
+            scroll-behavior: smooth;
+        }
         .glass-morphism {
             background: rgba(251, 249, 249, 0.65);
             backdrop-filter: blur(12px);
@@ -104,36 +107,93 @@
             position: absolute;
             z-index: 10;
         }
+        /* Active Navigation */
+        .nav-menu-link {
+            position: relative;
+            padding-bottom: 4px;
+        }
+        .nav-menu-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00342b, #004d40);
+            transition: width 0.3s ease;
+            border-radius: 1px;
+        }
+        .nav-menu-link.active {
+            color: #00342b !important;
+            font-weight: 600;
+        }
+        .nav-menu-link.active::after {
+            width: 100%;
+        }
+        /* Mobile Menu */
+        .mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .mobile-menu.open {
+            max-height: 300px;
+        }
     </style>
 </head>
 <body class="bg-background font-body text-on-surface antialiased overflow-x-hidden">
 
     <!-- TopNavBar -->
-    <nav class="fixed top-0 w-full z-50 bg-white/65 dark:bg-emerald-950/65 backdrop-blur-xl shadow-sm dark:shadow-emerald-900/20">
+    <nav id="main-navbar" class="fixed top-0 w-full z-50 bg-white/65 dark:bg-emerald-950/65 backdrop-blur-xl shadow-sm dark:shadow-emerald-900/20">
         <div class="flex justify-between items-center px-8 py-4 max-w-7xl mx-auto">
-            <div class="text-2xl font-noto-serif font-bold text-emerald-900 dark:text-emerald-100 tracking-tighter">NIKAH YUK!</div>
+            <a href="{{ url('/') }}" class="text-2xl font-noto-serif font-bold text-emerald-900 dark:text-emerald-100 tracking-tighter hover:opacity-80 transition-opacity">NIKAH YUK!</a>
             <div class="hidden md:flex gap-8 items-center">
-                <a class="font-noto-serif italic tracking-wide text-sm text-emerald-800/70 dark:text-emerald-200/70 hover:text-emerald-900 dark:hover:text-emerald-50 transition-colors" href="#">Features</a>
-                <a class="font-noto-serif italic tracking-wide text-sm text-emerald-800/70 dark:text-emerald-200/70 hover:text-emerald-900 dark:hover:text-emerald-50 transition-colors" href="#pricing">Pricing</a>
-                <a class="font-noto-serif italic tracking-wide text-sm text-emerald-800/70 dark:text-emerald-200/70 hover:text-emerald-900 dark:hover:text-emerald-50 transition-colors" href="#gallery">Gallery</a>
+                <a class="nav-menu-link font-noto-serif italic tracking-wide text-sm text-emerald-800/70 dark:text-emerald-200/70 hover:text-emerald-900 dark:hover:text-emerald-50 transition-colors" href="{{ url('/') }}" data-section="home">Home</a>
+                <a class="nav-menu-link font-noto-serif italic tracking-wide text-sm text-emerald-800/70 dark:text-emerald-200/70 hover:text-emerald-900 dark:hover:text-emerald-50 transition-colors" href="{{ url('/#features') }}" data-section="features">Features</a>
+                <a class="nav-menu-link font-noto-serif italic tracking-wide text-sm text-emerald-800/70 dark:text-emerald-200/70 hover:text-emerald-900 dark:hover:text-emerald-50 transition-colors" href="{{ url('/#pricing') }}" data-section="pricing">Pricing</a>
+                <a class="nav-menu-link font-noto-serif italic tracking-wide text-sm text-emerald-800/70 dark:text-emerald-200/70 hover:text-emerald-900 dark:hover:text-emerald-50 transition-colors" href="{{ url('/#gallery') }}" data-section="gallery">Gallery</a>
             </div>
             <div class="flex gap-4 items-center">
                 @if (Route::has('login'))
                     @auth
                         <a href="{{ url('/dashboard') }}" class="font-noto-serif italic tracking-wide text-sm text-emerald-800/70 dark:text-emerald-200/70 hover:opacity-80 transition-all duration-300 scale-95 active:scale-90">Dashboard</a>
                     @else
-                        <a href="{{ route('login') }}" class="font-noto-serif italic tracking-wide text-sm text-emerald-800/70 dark:text-emerald-200/70 hover:opacity-80 transition-all duration-300 scale-95 active:scale-90">Login</a>
+                        <a href="{{ route('login') }}" class="hidden md:inline font-noto-serif italic tracking-wide text-sm text-emerald-800/70 dark:text-emerald-200/70 hover:opacity-80 transition-all duration-300 scale-95 active:scale-90">Login</a>
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="bg-primary text-on-primary px-6 py-2 rounded-full font-noto-serif italic tracking-wide text-sm hover:opacity-80 transition-all duration-300 scale-95 active:scale-90 inline-block">Register</a>
+                            <a href="{{ route('register') }}" class="hidden md:inline-block bg-primary text-on-primary px-6 py-2 rounded-full font-noto-serif italic tracking-wide text-sm hover:opacity-80 transition-all duration-300 scale-95 active:scale-90">Register</a>
                         @endif
                     @endauth
+                @endif
+                <!-- Mobile Hamburger -->
+                <button id="mobile-menu-btn" class="md:hidden text-emerald-900 dark:text-emerald-100 focus:outline-none" aria-label="Toggle menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path id="hamburger-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        <path id="close-icon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu md:hidden bg-white/90 dark:bg-emerald-950/90 backdrop-blur-xl border-t border-emerald-100/30">
+            <div class="flex flex-col px-8 py-4 gap-4">
+                <a class="nav-menu-link font-noto-serif italic tracking-wide text-sm text-emerald-800/70 dark:text-emerald-200/70 hover:text-emerald-900 transition-colors" href="{{ url('/') }}" data-section="home">Home</a>
+                <a class="nav-menu-link font-noto-serif italic tracking-wide text-sm text-emerald-800/70 dark:text-emerald-200/70 hover:text-emerald-900 transition-colors" href="{{ url('/#features') }}" data-section="features">Features</a>
+                <a class="nav-menu-link font-noto-serif italic tracking-wide text-sm text-emerald-800/70 dark:text-emerald-200/70 hover:text-emerald-900 transition-colors" href="{{ url('/#pricing') }}" data-section="pricing">Pricing</a>
+                <a class="nav-menu-link font-noto-serif italic tracking-wide text-sm text-emerald-800/70 dark:text-emerald-200/70 hover:text-emerald-900 transition-colors" href="{{ url('/#gallery') }}" data-section="gallery">Gallery</a>
+                @if (Route::has('login'))
+                    @guest
+                        <a href="{{ route('login') }}" class="font-noto-serif italic tracking-wide text-sm text-emerald-800/70 hover:text-emerald-900 transition-colors">Login</a>
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}" class="bg-primary text-on-primary px-6 py-2 rounded-full font-noto-serif italic tracking-wide text-sm text-center hover:opacity-80 transition-all">Register</a>
+                        @endif
+                    @endguest
                 @endif
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+    <section id="home" class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
         <div class="absolute inset-0 z-0">
             <img class="w-full h-full object-cover opacity-60" data-alt="luxury wedding venue at golden hour" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxQToA7yFdz7u8bC8cylsQ5SzO_jkTmCbW9XoVY6Trmoi0dOUJ3W8a5oih2aoxQdvo_rrA3y2bilnB5RNU2nYvz9WTE0BlALEDvCZE73VTxVD6tnv6dDODPkzuSj3Qw4RY0hm6aYHOiJ-OlnpVxOZPT0lBr9Y4td-UYlg-iS3aUzVl-3M55y4Rcxdoqf_OFK4_r08XOq0X4bmx8mwu0M_yxTbZ5QloYGavEPjPX0nGocExHbhAmJPFpdq4u-dTO-sZ51CxEJf6VGg"/>
             <div class="absolute inset-0 bg-gradient-to-tr from-primary/10 via-background/80 to-secondary/10"></div>
@@ -153,7 +213,7 @@
                     Join Now
                     <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
                 </a>
-                <a href="#gallery" class="glass-morphism border border-outline-variant/30 text-primary px-12 py-5 rounded-full text-lg font-semibold hover:bg-white transition-colors inline-block">
+                <a href="{{ url('/#gallery') }}" class="glass-morphism border border-outline-variant/30 text-primary px-12 py-5 rounded-full text-lg font-semibold hover:bg-white transition-colors inline-block">
                     Explore Gallery
                 </a>
             </div>
@@ -161,7 +221,7 @@
     </section>
 
     <!-- Bento Grid Features -->
-    <section class="py-32 px-6 max-w-7xl mx-auto relative">
+    <section id="features" class="py-32 px-6 max-w-7xl mx-auto relative">
         <div class="text-center mb-20">
             <h2 class="font-headline text-4xl md:text-5xl text-primary mb-4">Crafting Memories</h2>
             <p class="font-body text-on-surface-variant">The future of wedding celebrations begins here.</p>
@@ -393,5 +453,79 @@
             </div>
         </div>
     </footer>
+    <!-- Active Navigation & Mobile Menu Script -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const hamburgerIcon = document.getElementById('hamburger-icon');
+        const closeIcon = document.getElementById('close-icon');
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', function() {
+                mobileMenu.classList.toggle('open');
+                hamburgerIcon.classList.toggle('hidden');
+                closeIcon.classList.toggle('hidden');
+            });
+        }
+
+        // Close mobile menu when a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', function() {
+                mobileMenu.classList.remove('open');
+                hamburgerIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+            });
+        });
+
+        // Active navigation via IntersectionObserver
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-menu-link');
+
+        if (sections.length > 0 && navLinks.length > 0) {
+            const observerOptions = {
+                root: null,
+                rootMargin: '-20% 0px -60% 0px',
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        const sectionId = entry.target.getAttribute('id');
+                        navLinks.forEach(function(link) {
+                            link.classList.remove('active');
+                            if (link.getAttribute('data-section') === sectionId) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(function(section) {
+                observer.observe(section);
+            });
+
+            // Set initial active state based on hash
+            const hash = window.location.hash.replace('#', '');
+            if (hash) {
+                navLinks.forEach(function(link) {
+                    if (link.getAttribute('data-section') === hash) {
+                        link.classList.add('active');
+                    }
+                });
+            } else {
+                // Default: set Home as active
+                navLinks.forEach(function(link) {
+                    if (link.getAttribute('data-section') === 'home') {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        }
+    });
+    </script>
 </body>
 </html>

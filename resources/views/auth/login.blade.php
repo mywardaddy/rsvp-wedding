@@ -65,16 +65,17 @@
 
     <header class="fixed top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-xl border-b border-white/20 shadow-sm">
         <nav class="flex justify-between items-center w-full px-8 py-5 max-w-7xl mx-auto">
-            <div class="font-headline text-2xl text-yellow-50 font-bold tracking-tight text-primary">NIKAH YUK!</div>
+            <a href="{{ url('/') }}" class="font-headline text-2xl text-yellow-50 font-bold tracking-tight text-primary hover:opacity-80 transition-opacity">NIKAH YUK!</a>
             <div class="hidden md:flex items-center gap-10">
-                <a class="text-on-surface/80 font-medium hover:text-primary text-yellow-50 transition-colors duration-300" href="#">Home</a>
-                <a class="text-on-surface/80 font-medium hover:text-primary text-yellow-50 transition-colors duration-300" href="#">Features</a>
-                <a class="text-on-surface/80 font-medium hover:text-primary text-yellow-50 transition-colors duration-300" href="#">Pricing</a>
-                <a class="text-on-surface/80 font-medium hover:text-primary text-yellow-50 transition-colors duration-300" href="#">Gallery</a>
+                <a class="text-on-surface/80 font-medium hover:text-primary text-yellow-50 transition-colors duration-300" href="{{ url('/') }}">Home</a>
+                <a class="text-on-surface/80 font-medium hover:text-primary text-yellow-50 transition-colors duration-300" href="{{ url('/#features') }}">Features</a>
+                <a class="text-on-surface/80 font-medium hover:text-primary text-yellow-50 transition-colors duration-300" href="{{ url('/#pricing') }}">Pricing</a>
+                <a class="text-on-surface/80 font-medium hover:text-primary text-yellow-50 transition-colors duration-300" href="{{ url('/#gallery') }}">Gallery</a>
             </div>
-            <div class="flex items-center gap-4 text-primary">
-                <button class="material-symbols-outlined p-2 hover:bg-white/40 rounded-full transition-colors">settings</button>
-                <button class="material-symbols-outlined p-2 hover:bg-white/40 rounded-full transition-colors">help</button>
+            <div class="flex items-center gap-4">
+                @if (Route::has('register'))
+                    <a href="{{ route('register') }}" class="text-yellow-50 font-medium text-sm hover:text-primary transition-colors duration-300">Register</a>
+                @endif
             </div>
         </nav>
     </header>

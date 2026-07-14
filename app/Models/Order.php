@@ -14,7 +14,7 @@ class Order extends Model
         'groom_name', 'bride_name', 'wedding_date',
         'package_name', 'original_price', 'discount_type',
         'discount_value', 'discount_amount', 'total_amount',
-        'status', 'paid_at',
+        'status', 'paid_at', 'expired_at', 'account_created_at',
     ];
 
     protected $casts = [
@@ -24,6 +24,8 @@ class Order extends Model
         'discount_amount' => 'integer',
         'total_amount' => 'integer',
         'paid_at' => 'datetime',
+        'expired_at' => 'datetime',
+        'account_created_at' => 'datetime',
     ];
 
     protected static function booted(): void
@@ -70,6 +72,11 @@ class Order extends Model
     public function isExpired(): bool
     {
         return $this->status === 'expired';
+    }
+
+    public function isAccountCreated(): bool
+    {
+        return !is_null($this->account_created_at);
     }
 
     // Formatted Accessors

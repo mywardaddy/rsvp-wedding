@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Event extends Model
 {
     protected $fillable = [
-        'user_id', 'title', 'slug', 'groom_name', 'bride_name',
+        'user_id', 'order_id', 'title', 'slug', 'groom_name', 'bride_name',
         'date', 'time_start', 'time_end', 'venue_name', 'venue_address',
         'venue_lat', 'venue_lng', 'description', 'cover_image',
         'love_story', 'gallery', 'music_url', 'theme_color', 'is_active',
@@ -65,6 +65,11 @@ class Event extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(Order::class);
     }
 
     public function guests(): HasMany
